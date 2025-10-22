@@ -1,0 +1,1 @@
+{{set-translations (asset "content/email-texts.json")}}{{t "BookingAcceptedRequest.Subject23" "Reminder, your PostPartners meeting is in 10 minutes!" }}

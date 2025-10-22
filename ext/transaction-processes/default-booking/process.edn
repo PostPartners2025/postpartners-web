@@ -44,7 +44,8 @@
   {:name :transition/accept,
    :actor :actor.role/provider,
    :actions
-   [{:name :action/accept-booking}
+   [{:name :action/update-protected-data}
+    {:name :action/accept-booking}
     {:name :action/stripe-capture-payment-intent}],
    :from :state/preauthorized,
    :to :state/accepted}
@@ -92,12 +93,18 @@
     {:name :action/decline-booking}],
    :from :state/preauthorized,
    :to :state/expired}
+  {:name :transition/send-reminder-email,
+   :at
+   {:fn/minus
+    [{:fn/timepoint [:time/booking-start]} {:fn/period ["PT10M"]}]},
+   :from :state/accepted,
+   :to :state/reminder-email-sent}
   {:name :transition/complete,
    :at
    {:fn/plus
     [{:fn/timepoint [:time/booking-end]} {:fn/period ["P2D"]}]},
    :actions [{:name :action/stripe-create-payout}],
-   :from :state/accepted,
+   :from :state/reminder-email-sent,
    :to :state/delivered}
   {:name :transition/operator-complete,
    :actor :actor.role/operator,
@@ -168,6 +175,10 @@
    :on :transition/accept,
    :to :actor.role/customer,
    :template :booking-accepted-request}
+  {:name :notification/booking-accepted-request-provider,
+   :on :transition/accept,
+   :to :actor.role/provider,
+   :template :booking-accepted-request-provider} 
   {:name :notification/booking-operator-accepted-request-to-customer,
    :on :transition/operator-accept,
    :to :actor.role/customer,
@@ -176,6 +187,14 @@
    :on :transition/operator-accept,
    :to :actor.role/provider,
    :template :booking-operator-accepted-request}
+  {:name :notification/booking-reminder,
+   :on :transition/send-reminder-email,
+   :to :actor.role/customer,
+   :template :booking-reminder}
+  {:name :notification/booking-reminder-provider,
+   :on :transition/send-reminder-email,
+   :to :actor.role/provider,
+   :template :booking-reminder-provider}  
   {:name :notification/booking-declined-request,
    :on :transition/decline,
    :to :actor.role/customer,

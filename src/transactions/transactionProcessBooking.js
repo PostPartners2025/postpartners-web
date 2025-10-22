@@ -38,6 +38,9 @@ export const transitions = {
   ACCEPT: 'transition/accept',
   DECLINE: 'transition/decline',
 
+  //send-reminder-email
+  SEND_REMINDER_EMAIL: 'transition/send-reminder-email',
+
   // The operator can accept or decline the offer on behalf of the provider
   OPERATOR_ACCEPT: 'transition/operator-accept',
   OPERATOR_DECLINE: 'transition/operator-decline',
@@ -81,6 +84,7 @@ export const states = {
   PREAUTHORIZED: 'preauthorized',
   DECLINED: 'declined',
   ACCEPTED: 'accepted',
+  REMINDER_EMAIL_SENT: 'reminder-email-sent',
   EXPIRED: 'expired',
   CANCELED: 'canceled',
   DELIVERED: 'delivered',
@@ -144,8 +148,14 @@ export const graph = {
     [states.ACCEPTED]: {
       on: {
         [transitions.CANCEL]: states.CANCELED,
-        [transitions.COMPLETE]: states.DELIVERED,
+        [transitions.SEND_REMINDER_EMAIL]: states.REMINDER_EMAIL_SENT,
         [transitions.OPERATOR_COMPLETE]: states.DELIVERED,
+      },
+    },
+
+    [states.REMINDER_EMAIL_SENT]: {
+      on: {
+        [transitions.COMPLETE]: states.DELIVERED,
       },
     },
 
@@ -180,6 +190,7 @@ export const graph = {
 export const isRelevantPastTransition = transition => {
   return [
     transitions.ACCEPT,
+    transitions.SEND_REMINDER_EMAIL,
     transitions.OPERATOR_ACCEPT,
     transitions.CANCEL,
     transitions.COMPLETE,
