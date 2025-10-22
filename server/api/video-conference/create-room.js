@@ -10,10 +10,11 @@ const createRoom = async (req, res) => {
       name: txID,
       description: listingTitle,
       template_id: process.env.VIDEO_CONFERENCE_TEMPLATE_ID,
-      enabled: false,
+      enabled: true,
     };
     const room = await hms.rooms.create(roomCreateOptions);
 
+    console.log('Room created successfully:', JSON.stringify(room));
     res.status(200).json(room);
   } catch (error) {
     console.log(error, 'Error creating room!!');

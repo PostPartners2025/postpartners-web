@@ -26,6 +26,8 @@ import {
 
 import { addMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 import { fetchCurrentUserNotifications } from '../../ducks/user.duck';
+import { transitions } from '../../transactions/transactionProcessBooking';
+import { getVideoParams } from './helper';
 
 const { UUID } = sdkTypes;
 
@@ -622,7 +624,7 @@ const refreshTransactionEntity = (sdk, txId, dispatch) => {
     });
 };
 
-export const makeTransition = (txId, transitionName, params) => (dispatch, getState, sdk) => {
+export const makeTransition = (txId, transitionName, params) => async (dispatch, getState, sdk) => {
   const state = getState();
   if (transitionInProgress(state)) {
     return Promise.reject(new Error('Transition already in progress'));
@@ -647,8 +649,19 @@ export const makeTransition = (txId, transitionName, params) => (dispatch, getSt
         expand: true,
       },
     });
+
+  let newParams = params;
+  if (transitions.ACCEPT === transitionName) {
+    newParams = await getVideoParams(transaction, params);
+  }
+
+  console.log('Making transition', transitionName, 'with params', newParams);
+
   const normalTransition = () =>
-    sdk.transactions.transition({ id: txId, transition: transitionName, params }, { expand: true });
+    sdk.transactions.transition(
+      { id: txId, transition: transitionName, params: newParams },
+      { expand: true }
+    );
   const makeCall = process?.isPrivileged(transitionName) ? privilegedTransition : normalTransition;
 
   return makeCall()
