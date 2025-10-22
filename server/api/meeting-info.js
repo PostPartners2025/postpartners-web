@@ -60,6 +60,7 @@ module.exports = async (req, res) => {
       lastTransition,
     });
   } catch (error) {
+    console.log('Error fetching meeting info:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 };
