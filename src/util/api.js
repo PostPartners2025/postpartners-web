@@ -144,3 +144,15 @@ export const transitionPrivileged = body => {
 export const createUserWithIdp = body => {
   return post('/api/auth/create-user-with-idp', body);
 };
+
+export const createVideoRoom = body => {
+  return post('/api/video-conference/create-room', body);
+};
+
+export const updateRoom = body => {
+  return post('/api/video-conference/update-room-status', body);
+};
+
+export const generateVideoRoomCodes = body => {
+  return post('/api/video-conference/create-room-codes', body);
+};
