@@ -28,12 +28,15 @@
                 {{/eq}}{{#eq "line-item/night" code}}
                 <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848">{{t "BookingAcceptedRequest.DescriptionDaily" "{providerDisplayName} has accepted your booking request for {listingTitle} from {dateStart,date,::YYYYMMMd} to {dateEnd,date,::YYYYMMMd}." dateStart=booking.start dateEnd=booking.end listingTitle=listing.title providerDisplayName=provider.display-name}}</p>
                 {{/eq}}{{/each}}
+
+                {{#eq "virtual" protected-data.modalityName}}
                 <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848">
                   Your meeting link: <a target="_blank" style="color:#007DF2;text-decoration:none" href="{{protected-data.providerLink}}">{{protected-data.providerLink}}</a>
                 </p>
                 <p>
                   Please add this date and meeting link to your personal calendar or save this email as this will be how you access the meeting at the provided date and time; replacement links will not be provided.
                 </p>
+                {{/eq}}  
         
                 <table style="padding:16px 0 0" align="center" border="0" cellPadding="0" cellSpacing="0" role="presentation" width="100%">
                   <tbody>
