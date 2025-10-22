@@ -308,6 +308,8 @@ export class TransactionPanelComponent extends Component {
                   className={css.deliveryInfoSection}
                   listing={listing}
                   showBookingLocation={showBookingLocation}
+                  protectedData={protectedData}
+                  isCustomer={isCustomer}
                 />
               </div>
             ) : null}

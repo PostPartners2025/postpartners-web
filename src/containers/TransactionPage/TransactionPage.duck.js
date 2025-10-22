@@ -24,7 +24,7 @@ import {
   isBookingProcess,
 } from '../../transactions/transaction';
 
-import { addMarketplaceEntities } from '../../ducks/marketplaceData.duck';
+import { addMarketplaceEntities, getMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 import { fetchCurrentUserNotifications } from '../../ducks/user.duck';
 import { transitions } from '../../transactions/transactionProcessBooking';
 import { getVideoParams } from './helper';
@@ -631,7 +631,7 @@ export const makeTransition = (txId, transitionName, params) => async (dispatch,
   }
   dispatch(transitionRequest(transitionName));
 
-  const transaction = state?.marketplaceData?.entities?.transaction?.[txId?.uuid];
+  const transaction = getMarketplaceEntities(getState(), [{ id: txId, type: 'transaction' }])[0];
   const processName = resolveLatestProcessName(transaction?.attributes?.processName);
   const process = getProcess(processName);
 
@@ -651,11 +651,13 @@ export const makeTransition = (txId, transitionName, params) => async (dispatch,
     });
 
   let newParams = params;
-  if (transitions.ACCEPT === transitionName) {
+
+  if (
+    transitions.ACCEPT === transitionName &&
+    transaction?.attributes?.protectedData.modalityName === 'virtual'
+  ) {
     newParams = await getVideoParams(transaction, params);
   }
-
-  console.log('Making transition', transitionName, 'with params', newParams);
 
   const normalTransition = () =>
     sdk.transactions.transition(

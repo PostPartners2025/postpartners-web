@@ -524,3 +524,17 @@
     margin-top: 16px;
   }
 }
+
+.modality {
+  margin: 10px 0 -30px 0;
+
+  @media (max-width: 767px) {
+    margin-left: 24px;
+  }
+}
+
+.meetingLink {
+  color: var(--marketplaceColor);
+  font-size: 16px;
+  text-decoration: underline;
+}

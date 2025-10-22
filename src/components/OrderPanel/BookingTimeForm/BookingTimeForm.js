@@ -67,6 +67,19 @@ const onPriceVariantChange = props => value => {
   });
 };
 
+const onModalityChange = props => value => {
+  const { form: formApi, seatsEnabled } = props;
+
+  formApi.batch(() => {
+    formApi.change('bookingStartDate', null);
+    formApi.change('bookingStartTime', null);
+    formApi.change('bookingEndTime', null);
+    if (seatsEnabled) {
+      formApi.change('seats', 1);
+    }
+  });
+};
+
 /**
  * A form for selecting booking time.
  *
@@ -107,6 +120,9 @@ export const BookingTimeForm = props => {
     priceVariantFieldComponent: PriceVariantFieldComponent,
     preselectedPriceVariant,
     isPublishedListing,
+    modalityFieldComponent: ModalityFieldComponent,
+    isModalityInUse,
+    modality,
     ...rest
   } = props;
 
@@ -150,6 +166,7 @@ export const BookingTimeForm = props => {
         const startDate = startTime ? timestampToDate(startTime) : null;
         const endDate = endTime ? timestampToDate(endTime) : null;
         const priceVariantName = values?.priceVariantName || null;
+        const modalityName = values?.modalityName || null;
 
         // This is the place to collect breakdown estimation data. See the
         // EstimatedCustomerBreakdownMaybe component to change the calculations
@@ -179,6 +196,14 @@ export const BookingTimeForm = props => {
               />
             ) : null}
 
+            {ModalityFieldComponent ? (
+              <ModalityFieldComponent
+                modalities={modality.map(name => ({ name }))}
+                onModalityChange={onModalityChange(formRenderProps)}
+                disabled={!isPublishedListing}
+              />
+            ) : null}
+
             {monthlyTimeSlots && timeZone ? (
               <FieldDateAndTimeInput
                 seatsEnabled={seatsEnabled}
@@ -200,7 +225,10 @@ export const BookingTimeForm = props => {
                 intl={intl}
                 form={form}
                 pristine={pristine}
-                disabled={isPriceVariationsInUse && !priceVariantName}
+                disabled={
+                  (isPriceVariationsInUse && !priceVariantName) ||
+                  (isModalityInUse && !modalityName)
+                }
                 timeZone={timeZone}
                 dayCountAvailableForBooking={dayCountAvailableForBooking}
                 handleFetchLineItems={onHandleFetchLineItems}

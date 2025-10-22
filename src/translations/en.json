@@ -1333,5 +1333,13 @@
   "UserDisplayName.deleted": "Deleted user",
   "UserNav.accountSettings": "Account settings",
   "UserNav.profileSettings": "Profile settings",
-  "UserNav.yourListings": "Your listings"
+  "UserNav.yourListings": "Your listings",
+  "ModalityPicker.modalityLabel": "Modality",
+  "ModalityPicker.selectPlaceholder": "Select modality",
+  "ModalityPicker.modalityUnselected": "Choose...",
+  "TransactionPanel.modalityHeading": "Modality",
+  "InboxPage.default-booking.reminder-email-sent.status": "Upcoming booking",
+  "TransactionPage.default-booking.provider.reminder-email-sent.title": "You have an upcoming booking in 10mins!",
+  "TransactionPage.default-booking.customer.reminder-email-sent.title": "You have an upcoming booking in 10mins!",
+  "TransactionPage.ActivityFeed.default-booking.reminder-email-sent": "{actor, select, you {Booking reminder email sent.} operator {The booking request was accepted.} other {Booking reminder email sent.}}"
 }

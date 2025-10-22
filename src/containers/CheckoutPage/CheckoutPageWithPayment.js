@@ -116,6 +116,8 @@ const getOrderParams = (pageData, shippingDetails, optionalPaymentParams, config
   const priceVariantNameMaybe = priceVariantName ? { priceVariantName } : {};
   const priceVariant = priceVariants?.find(pv => pv.name === priceVariantName);
   const priceVariantMaybe = priceVariant ? prefixPriceVariantProperties(priceVariant) : {};
+  const modalityName = pageData.orderData?.modalityName;
+  const modalityMaybe = modalityName ? { modalityName } : {};
 
   const protectedDataMaybe = {
     protectedData: {
@@ -123,6 +125,7 @@ const getOrderParams = (pageData, shippingDetails, optionalPaymentParams, config
       ...deliveryMethodMaybe,
       ...shippingDetails,
       ...priceVariantMaybe,
+      ...modalityMaybe,
     },
   };
 

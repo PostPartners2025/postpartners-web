@@ -38,6 +38,7 @@ import { ModalInMobile, PrimaryButton, AvatarSmall, H1, H2 } from '../../compone
 import PriceVariantPicker from './PriceVariantPicker/PriceVariantPicker';
 
 import css from './OrderPanel.module.css';
+import ModalityPicker from './BookingTimeForm/ModalityPicker/ModalityPicker';
 
 const BookingTimeForm = loadable(() =>
   import(/* webpackChunkName: "BookingTimeForm" */ './BookingTimeForm/BookingTimeForm')
@@ -367,6 +368,8 @@ const OrderPanel = props => {
       ? priceVariants.find(pv => pv?.name && createSlug(pv?.name) === preselectedPriceVariantSlug)
       : null;
 
+  const isModalityInUse = publicData?.modality?.length > 0;
+
   const priceVariantsMaybe = isPriceVariationsInUse
     ? {
         isPriceVariationsInUse,
@@ -374,6 +377,9 @@ const OrderPanel = props => {
         priceVariantFieldComponent: PriceVariantPicker,
         preselectedPriceVariant,
         isPublishedListing: isPublishedListing(listing),
+        isModalityInUse,
+        modalityFieldComponent: ModalityPicker,
+        modality: publicData?.modality,
       }
     : !isPriceVariationsInUse && showBookingFixedDurationForm
     ? {

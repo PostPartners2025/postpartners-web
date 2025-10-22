@@ -1,4 +1,4 @@
-const { generateVideoRoomCodes, updateRoom, createVideoRoom } = require('../../util/api');
+const { generateVideoRoomCodes, createVideoRoom } = require('../../util/api');
 
 const { REACT_APP_MEETING_SUB_DOMAIN } = process.env;
 
@@ -7,11 +7,6 @@ const getVideoParams = async (tx, params) => {
     listingTitle: tx.listing.attributes.title,
     txID: tx.id.uuid.replace(/-/g, '').slice(0, 24),
   });
-
-//   await updateRoom({
-//     roomId: roomRes.id,
-//     isEnable: true,
-//   });
 
   const roomCodes = await generateVideoRoomCodes({
     roomId: roomRes.id,
