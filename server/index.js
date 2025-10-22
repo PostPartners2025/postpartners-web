@@ -81,6 +81,17 @@ const app = express();
 const errorPage500 = fs.readFileSync(path.join(buildPath, '500.html'), 'utf-8');
 const errorPage404 = fs.readFileSync(path.join(buildPath, '404.html'), 'utf-8');
 
+app.use((req, res, next) => {
+  const allowedOrigins = process.env.ALLOWED_ORIGINS;
+
+  if (allowedOrigins.includes(req.headers.origin)) {
+    res.setHeader('Access-Control-Allow-Origin', req.headers.origin);
+    res.setHeader('Access-Control-Allow-Methods', 'GET');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  }
+  next();
+});
+
 // Filter out bot requests that scan websites for php vulnerabilities
 // from paths like /asdf/index.php, //cms/wp-includes/wlwmanifest.xml, etc.
 // There's no need to pass those to React app rendering as it causes unnecessary asset fetches.
