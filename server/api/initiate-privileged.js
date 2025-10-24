@@ -11,7 +11,7 @@ const {
 
 const { Money } = sharetribeSdk.types;
 
-const listingPromise = (sdk, id) => sdk.listings.show({ id });
+const listingPromise = (sdk, id) => sdk.listings.show({ id, include: ['author'] });
 
 const getFullOrderData = (orderData, bodyParams, currency) => {
   const { offerInSubunits } = orderData || {};
@@ -59,6 +59,8 @@ module.exports = (req, res) => {
     .then(([showListingResponse, fetchAssetsResponse]) => {
       const listing = showListingResponse.data.data;
       const commissionAsset = fetchAssetsResponse.data.data[0];
+      const adminAssignedCommission =
+        showListingResponse.data.included[0].attributes.profile.metadata?.commission;
 
       const currency = listing.attributes.price?.currency || orderData.currency;
       const { providerCommission, customerCommission } =
@@ -67,7 +69,7 @@ module.exports = (req, res) => {
       lineItems = transactionLineItems(
         listing,
         getFullOrderData(orderData, bodyParams, currency),
-        providerCommission,
+        { percentage: adminAssignedCommission ?? providerCommission.percentage },
         customerCommission
       );
       metadataMaybe = getMetadata(orderData, transitionName);
